@@ -75,7 +75,7 @@ const AnalysisForm = () => {
   ] = useLazyFetchBranchesQuery();
   const [getQuestions, { isLoading, data, isError, isSuccess }] =
     useLazyGetQuestionsQuery();
-  const { control, handleSubmit, getValues } = useForm({
+  const { control, handleSubmit, getValues, setValue } = useForm({
     mode: "onSubmit",
   });
   const [qusIndex, setQusIndex] = useState<number>(0);
@@ -135,6 +135,14 @@ const AnalysisForm = () => {
     getQuestions({});
     fetchBranches({});
   }, []);
+
+  // Ensure default location is set once branches are loaded (and on mount)
+  useEffect(() => {
+    // Hardcode desired default branch name
+    const defaultBranch = "kathiawarStore";
+    // Set the form value so the Select shows it
+    setValue("location", defaultBranch, { shouldValidate: false, shouldDirty: false });
+  }, [setValue, dataFetchBranches]);
 
   const handleMultiSelection = (checkedId: any, fieldName: string) => {
     const { [`${fieldName}`]: ids } = getValues();
@@ -332,12 +340,7 @@ const AnalysisForm = () => {
                             <Grid item xs={12}>
                               <SelectInputFieldComponent
                                 name="location"
-                                defaultValue={
-                                  (dataFetchBranches?.data?.find(
-                                    (branch: { name: string }) =>
-                                      branch.name === subDomain.subDomain
-                                  )?.name as string) || ""
-                                }
+                                defaultValue={"kathiawarStore"}
                                 control={control}
                                 size="medium"
                                 targetValue="name"
@@ -345,14 +348,17 @@ const AnalysisForm = () => {
                                 label=""
                                 id="location-input"
                                 options={
-                                  dataFetchBranches?.data?.map(
-                                    (branch: { label: string; name: string }) => ({
-                                      ...branch,
-                                      label: branch.label
-                                        .replace(/_/g, " ")
-                                        .replace(/\b\w/g, (char) => char.toUpperCase()),
-                                    })
-                                  ) || []
+                                  ([{ label: "kathiawarStore", name: "kathiawarStore" }]
+                                    .concat(
+                                      dataFetchBranches?.data?.map(
+                                        (branch: { label: string; name: string }) => ({
+                                          ...branch,
+                                          label: branch.label
+                                            .replace(/_/g, " ")
+                                            .replace(/\b\w/g, (char) => char.toUpperCase()),
+                                        })
+                                      ) || []
+                                    ))
                                 }
                               />
                             </Grid>

@@ -54,6 +54,7 @@ const SelectInputFieldComponent = ({
             <InputLabel id={id}>{label}</InputLabel>
             <Select
               {...field}
+              value={field.value ?? defaultValue}
               fullWidth={true}
               labelId={id}
               id={id}
