@@ -27,6 +27,7 @@ import {
   useVerifyOtpMutation,
 } from "@/redux/api/authApi";
 import { toast } from "react-toastify";
+import { subDomain } from "@/utils/constants";
 import SelectInputFieldComponent from "@/components/form-felds/SelectInput";
 
 const StyledAnalysisFormWrapper = styled(Box)(({ theme }) => ({
@@ -331,21 +332,27 @@ const AnalysisForm = () => {
                             <Grid item xs={12}>
                               <SelectInputFieldComponent
                                 name="location"
-                                defaultValue="leaf_water_studio"
+                                defaultValue={
+                                  (dataFetchBranches?.data?.find(
+                                    (branch: { name: string }) =>
+                                      branch.name === subDomain.subDomain
+                                  )?.name as string) || ""
+                                }
                                 control={control}
                                 size="medium"
                                 targetValue="name"
                                 displayLabelName="label"
                                 label=""
                                 id="location-input"
-                                
                                 options={
-                                  dataFetchBranches?.data?.map((branch:{ label: string; name: string }) => ({
-                                    ...branch,
-                                    label: branch.label
-                                    .replace(/_/g, " ") 
-                                    .replace(/\b\w/g, (char) => char.toUpperCase())
-                                  })) || []
+                                  dataFetchBranches?.data?.map(
+                                    (branch: { label: string; name: string }) => ({
+                                      ...branch,
+                                      label: branch.label
+                                        .replace(/_/g, " ")
+                                        .replace(/\b\w/g, (char) => char.toUpperCase()),
+                                    })
+                                  ) || []
                                 }
                               />
                             </Grid>

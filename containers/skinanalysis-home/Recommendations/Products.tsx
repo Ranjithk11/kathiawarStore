@@ -262,7 +262,7 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
           </Sticky>
           {[
             data?.data?.[0]?.recommendedProducts?.highRecommendation[
-              selectedTab
+            selectedTab
             ],
           ]?.map((recommended: any) => (
             <Box mt={2}>
@@ -281,19 +281,19 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
                   <>
                     <Grid item xs={12}>
                       <Box component="div" className="skin-analysis-result">
-                        {/* {recommended?.products
-                          ?.slice(0, 3)
-                          .map((product: any, index: number) => ( */}
                         {recommended?.products
-                          ?.filter((product: any) => {
-                            const discountValue = product?.discount?.value || 0;
-                            const discountedPrice =
-                              product.retailPrice -
-                              product.retailPrice * (discountValue / 100);
-                            return discountedPrice >= 500;
-                          })
-                          .slice(0, 3)
+                          ?.slice(0, 3)
                           .map((product: any, index: number) => (
+                            // {recommended?.products
+                            //   ?.filter((product: any) => {
+                            //     const discountValue = product?.discount?.value || 0;
+                            //     const discountedPrice =
+                            //       product.retailPrice -
+                            //       product.retailPrice * (discountValue / 100);
+                            //     return discountedPrice >= 500;
+                            //   })
+                            //   .slice(0, 3)
+                            //   .map((product: any, index: number) => (
                             <>
                               {product?.isShopifyAvailable && (
                                 <ProductCard
@@ -347,17 +347,23 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
                       xs={12}
                       alignItems="stretch"
                     >
-                      
+
+
                       {recommended?.products
-                        ?.filter((product: any) => {
-                          const discountValue = product?.discount?.value || 0;
-                          const discountedPrice =
-                            product.retailPrice -
-                            product.retailPrice * (discountValue / 100);
-                          return discountedPrice >= 500;
-                        })
-                        .slice(0, 3)
+                        ?.slice(0, 3)
                         .map((product: any, index: number) => (
+
+
+                          // {recommended?.products
+                          //   ?.filter((product: any) => {
+                          //     const discountValue = product?.discount?.value || 0;
+                          //     const discountedPrice =
+                          //       product.retailPrice -
+                          //       product.retailPrice * (discountValue / 100);
+                          //     return discountedPrice >= 500;
+                          //   })
+                          //   .slice(0, 3)
+                          //   .map((product: any, index: number) => (
                           <>
                             {product?.isShopifyAvailable && (
                               <Grid key={product?._id} item xs={6} md={4}>

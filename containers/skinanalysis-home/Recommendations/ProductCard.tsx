@@ -404,7 +404,7 @@ const ProductCard = ({
                 kathiawarstores.com
               </YellowButton>
               <YellowButton href="tel:089770 16605" size="medium" sx={{ width: { xs: "90%", sm: "auto" } }}>
-                Call us at 8309793568
+                Call us at 7993447747
               </YellowButton>
             </Box>
             <Typography

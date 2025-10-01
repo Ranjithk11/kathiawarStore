@@ -14,16 +14,17 @@ const addTokenToRequest = async (headers: any, { getState }: any) => {
 //     console.log(session?.user?.token);
 //     headers.set("Authorization", `Bearer ${session.user.token}`);
 //   }
- // headers.set("x-db-token",subDomain._id)
+  // Ensure tenant header is sent with every request
+  headers.set("x-db-token", subDomain._id);
   return headers;
 };
 
 const inititBaseQuery = ({ fetchBaseQueryArgs }: BaseQueryProps) => {
   return fetchBaseQuery({
     baseUrl: process.env.NEXT_PUBLIC_API_URL,
-    // prepareHeaders: (headers, { getState }: any) => {
-    //   return addTokenToRequest(headers, { getState });
-    // },
+    prepareHeaders: (headers, { getState }: any) => {
+      return addTokenToRequest(headers, { getState });
+    },
     ...fetchBaseQueryArgs,
   });
 };
