@@ -221,7 +221,7 @@ const ViewAdminSkincareReport = () => {
             />
           )} */}
           <Routine userData={dataImageInfo} />
-          <SalonServices
+          {/* <SalonServices
             data={
               data?.data?.productRecommendation?.recommendedSalonServices || []
             }
@@ -231,7 +231,7 @@ const ViewAdminSkincareReport = () => {
               data?.data?.productRecommendation?.recommendedCosmeticServices ||
               []
             }
-          />
+          /> */}
           <Payment />
           {data?.data?.productRecommendation?.dietPlan && (
             <DietChart data={data?.data?.productRecommendation?.dietPlan} />

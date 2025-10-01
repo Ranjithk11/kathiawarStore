@@ -226,7 +226,7 @@ const UserSkinAnalysisRecommendation = () => {
             )} */}
 
           <Routine userData={dataImageInfo} />
-          <SalonServices
+          {/* <SalonServices
             data={
               data?.data?.productRecommendation?.recommendedSalonServices || []
             }
@@ -236,7 +236,7 @@ const UserSkinAnalysisRecommendation = () => {
               data?.data?.productRecommendation?.recommendedCosmeticServices ||
               []
             }
-          />
+          /> */}
           {data?.data?.productRecommendation?.dietPlan && (
             <DietChart data={data?.data?.productRecommendation?.dietPlan} />
           )}
