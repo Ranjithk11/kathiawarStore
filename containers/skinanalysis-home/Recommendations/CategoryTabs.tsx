@@ -26,9 +26,15 @@ const CategoryTabs = ({ data, activeTab, onChangeTab }: CategoryTabsProps) => {
       allowScrollButtonsMobile
       onChange={onChangeTab}
     >
-      {data?.map((item) => (
+      {data?.map((item, index) => (
         <Tab
-          key={item?.key}
+          key={
+            item?.productCategory?._id ||
+            item?.productCategory?._key ||
+            item?._key ||
+            item?.key ||
+            index
+          }
           label={
             item?.productCategory?.title || item?.lipProductCategory?.title
           }

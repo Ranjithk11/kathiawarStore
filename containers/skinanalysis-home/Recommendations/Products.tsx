@@ -117,6 +117,47 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const containerRef: any = useRef(null);
 
+  // Build a merged category list from both high and low recommendations.
+  // Categories are deduplicated by productCategory._id (fallback to _key or title).
+  const high =
+    data?.data?.[0]?.recommendedProducts?.highRecommendation || [];
+  const low = data?.data?.[0]?.recommendedProducts?.lowRecommendation || [];
+
+  const mergedCategories = React.useMemo(() => {
+    const map = new Map<string, any>();
+
+    const pushItems = (items: any[]) => {
+      items?.forEach((item) => {
+        const cat = item?.productCategory || item?.lipProductCategory;
+        const catId = cat?._id || cat?._key || cat?.title;
+        if (!catId) return;
+
+        if (!map.has(catId)) {
+          map.set(catId, {
+            ...item,
+            // Ensure we keep the category metadata and start a fresh products array
+            productCategory: cat,
+            products: [...(item?.products || [])],
+          });
+        } else {
+          const existing = map.get(catId);
+          existing.products = [...existing.products, ...(item?.products || [])];
+          map.set(catId, existing);
+        }
+      });
+    };
+
+    // Maintain priority order: high first, then low
+    pushItems(high);
+    pushItems(low);
+
+    // Optionally, you could sort categories by sortOrder if present
+    const result = Array.from(map.values());
+    return result?.sort(
+      (a, b) => (a?.productCategory?.sortOrder || 0) - (b?.productCategory?.sortOrder || 0)
+    );
+  }, [high, low]);
+
   return (
     <StyledProductsWrapper
       ref={containerRef}
@@ -252,7 +293,7 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
           >
             <Paper>
               <CategoryTabs
-                data={data?.data?.[0]?.recommendedProducts?.highRecommendation}
+                data={mergedCategories}
                 onChangeTab={(event, value) => {
                   setSelectedTab(value);
                 }}
@@ -261,9 +302,7 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
             </Paper>
           </Sticky>
           {[
-            data?.data?.[0]?.recommendedProducts?.highRecommendation[
-            selectedTab
-            ],
+            mergedCategories?.[selectedTab],
           ]?.map((recommended: any) => (
             <Box mt={2}>
               <Grid container key={recommended?.productCategory?._id}>
@@ -281,42 +320,26 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
                   <>
                     <Grid item xs={12}>
                       <Box component="div" className="skin-analysis-result">
-                        {recommended?.products
-                          ?.slice(0, 3)
-                          .map((product: any, index: number) => (
-                            // {recommended?.products
-                            //   ?.filter((product: any) => {
-                            //     const discountValue = product?.discount?.value || 0;
-                            //     const discountedPrice =
-                            //       product.retailPrice -
-                            //       product.retailPrice * (discountValue / 100);
-                            //     return discountedPrice >= 500;
-                            //   })
-                            //   .slice(0, 3)
-                            //   .map((product: any, index: number) => (
+                        {(() => {
+                          const products = recommended?.products || [];
+                          const available = products.filter(
+                            (p: any) => p?.isShopifyAvailable
+                          );
+                          const list = available.length ? available : products;
+                          return list.slice(0, 3).map((product: any, index: number) => (
                             <>
-                              {product?.isShopifyAvailable && (
-                                <ProductCard
-                                  category={
-                                    data?.data?.[0]?.recommendedProducts
-                                      ?.highRecommendation[selectedTab]
-                                      ?.productCategory?.title
-                                  }
-                                  key={index}
-                                  minWidth={300}
-                                  {...product}
-                                  enabledMask={
-                                    false
-                                    // isAdminView
-                                    //   ? false
-                                    //   : data?.data?.user?.isPremiumCustomer
-                                    //   ? false
-                                    //   : index > 0
-                                  }
-                                />
-                              )}
+                              <ProductCard
+                                category={
+                                  recommended?.productCategory?.title
+                                }
+                                key={product?._id || index}
+                                minWidth={300}
+                                {...product}
+                                enabledMask={false}
+                              />
                             </>
-                          ))}
+                          ));
+                        })()}
                       </Box>
                     </Grid>
                     {/* <Grid
@@ -348,45 +371,24 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
                       alignItems="stretch"
                     >
 
-
-                      {recommended?.products
-                        ?.slice(0, 3)
-                        .map((product: any, index: number) => (
-
-
-                          // {recommended?.products
-                          //   ?.filter((product: any) => {
-                          //     const discountValue = product?.discount?.value || 0;
-                          //     const discountedPrice =
-                          //       product.retailPrice -
-                          //       product.retailPrice * (discountValue / 100);
-                          //     return discountedPrice >= 500;
-                          //   })
-                          //   .slice(0, 3)
-                          //   .map((product: any, index: number) => (
+                      {(() => {
+                        const products = recommended?.products || [];
+                        const available = products.filter(
+                          (p: any) => p?.isShopifyAvailable
+                        );
+                        const list = available.length ? available : products;
+                        return list.slice(0, 3).map((product: any, index: number) => (
                           <>
-                            {product?.isShopifyAvailable && (
-                              <Grid key={product?._id} item xs={6} md={4}>
-                                <ProductCard
-                                  {...product}
-                                  category={
-                                    data?.data?.[0]?.recommendedProducts
-                                      ?.highRecommendation[selectedTab]
-                                      ?.productCategory?.title
-                                  }
-                                  enabledMask={
-                                    false
-                                    // isAdminView
-                                    //   ? false
-                                    //   : data?.data?.user?.isPremiumCustomer
-                                    //   ? false
-                                    //   : index > 0
-                                  }
-                                />
-                              </Grid>
-                            )}
+                            <Grid key={product?._id || index} item xs={6} md={4}>
+                              <ProductCard
+                                {...product}
+                                category={recommended?.productCategory?.title}
+                                enabledMask={false}
+                              />
+                            </Grid>
                           </>
-                        ))}
+                        ));
+                      })()}
                     </Grid>
 
                     {/* <Grid

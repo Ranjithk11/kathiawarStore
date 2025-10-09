@@ -28,6 +28,7 @@ const StyledFooterMainBox = styled(Box)(({ theme }) => ({
     fontSize: 14,
     width: "56%",
     margin: "0px auto",
+
   },
   "& .menu_heading": {
     color: theme.palette.common.white,
@@ -57,7 +58,7 @@ const FooterComponent = () => {
           justifyContent="center"
         >
           <Grid item>
-            <Box mb={3} textAlign="center">
+            <Box textAlign="center">
               <img src="/logo/kathiwarlogo.png" width={250} />
             </Box>
             {/* <Typography
@@ -68,6 +69,22 @@ const FooterComponent = () => {
             >
               SKINSKA PHARMACEUTICA PRIVATE LIMITED
             </Typography> */}
+
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <Typography sx={{ color: "#fff", fontSize: 20 }} variant="h3">
+                  Powered By{" "}
+                  {/* <Box component="span" sx={{ color: "#00FFAA", fontWeight: "bold" }}>
+                    Leafwater
+                  </Box> */}
+                </Typography>
+                <Box ml={2}>
+                  <img src="/logo/logo_gold_white.png" width={100} alt="Leafwater Logo" />
+                </Box>
+              </Box>
+            </Grid>
+
+
             <Typography
               className="address"
               color=""
@@ -153,6 +170,10 @@ const FooterComponent = () => {
               </IconButton>
             </Grid>
           </Grid>
+
+
+
+
         </Grid>
       </Container>
     </StyledFooterMainBox>
