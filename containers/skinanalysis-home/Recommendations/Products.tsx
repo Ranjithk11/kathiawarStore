@@ -117,46 +117,16 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const containerRef: any = useRef(null);
 
-  // Build a merged category list from both high and low recommendations.
-  // Categories are deduplicated by productCategory._id (fallback to _key or title).
+  // Build category list from high recommendations only.
   const high =
     data?.data?.[0]?.recommendedProducts?.highRecommendation || [];
-  const low = data?.data?.[0]?.recommendedProducts?.lowRecommendation || [];
 
-  const mergedCategories = React.useMemo(() => {
-    const map = new Map<string, any>();
-
-    const pushItems = (items: any[]) => {
-      items?.forEach((item) => {
-        const cat = item?.productCategory || item?.lipProductCategory;
-        const catId = cat?._id || cat?._key || cat?.title;
-        if (!catId) return;
-
-        if (!map.has(catId)) {
-          map.set(catId, {
-            ...item,
-            // Ensure we keep the category metadata and start a fresh products array
-            productCategory: cat,
-            products: [...(item?.products || [])],
-          });
-        } else {
-          const existing = map.get(catId);
-          existing.products = [...existing.products, ...(item?.products || [])];
-          map.set(catId, existing);
-        }
-      });
-    };
-
-    // Maintain priority order: high first, then low
-    pushItems(high);
-    pushItems(low);
-
-    // Optionally, you could sort categories by sortOrder if present
-    const result = Array.from(map.values());
-    return result?.sort(
+  const highCategories = React.useMemo(() => {
+    const arr = Array.isArray(high) ? [...high] : [];
+    return arr.sort(
       (a, b) => (a?.productCategory?.sortOrder || 0) - (b?.productCategory?.sortOrder || 0)
     );
-  }, [high, low]);
+  }, [high]);
 
   return (
     <StyledProductsWrapper
@@ -293,7 +263,7 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
           >
             <Paper>
               <CategoryTabs
-                data={mergedCategories}
+                data={highCategories}
                 onChangeTab={(event, value) => {
                   setSelectedTab(value);
                 }}
@@ -302,7 +272,7 @@ const ProductsView = ({ data, isAdminView }: ProductsViewProps) => {
             </Paper>
           </Sticky>
           {[
-            mergedCategories?.[selectedTab],
+            highCategories?.[selectedTab],
           ]?.map((recommended: any) => (
             <Box mt={2}>
               <Grid container key={recommended?.productCategory?._id}>

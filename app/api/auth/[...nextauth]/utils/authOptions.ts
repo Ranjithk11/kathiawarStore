@@ -1,12 +1,7 @@
 import { AuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
-import {
-  loginUser,
-  saveUser,
-  updateSession,
-  updateToken,
-} from "@/redux/api/authApi";
+import { loginUser, saveUser, updateSession, updateToken } from "./serverAuth";
 import _ from "lodash";
 
 const authOptions: AuthOptions = {
