@@ -281,7 +281,13 @@ const ProductCard = ({
                 </Typography>
               </Box>
             )}
-            <Box mt={1}>
+
+
+            <Typography variant="subtitle1" color="secondary">
+              <Box component="span" sx={{ color: "primary.main" }}>INR.</Box>
+              {retailPrice}/-
+            </Typography>
+            {/* <Box mt={1}>
               {calculateDiscount(retailPrice, discount?.value) ===
                 retailPrice && (
                   <Typography color="primary" variant="subtitle1">
@@ -311,7 +317,7 @@ const ProductCard = ({
                   <span> {discount?.value ? `${discount.value}%` : " "}</span>
                 </Typography>
               </Box>
-            )}
+            )} */}
           </Grid>
         </Grid>
       </Box>
@@ -375,7 +381,7 @@ const ProductCard = ({
             style={{ backgroundImage: `url(/images/popupbg.png)` }}
             onClick={(e: React.MouseEvent) => e.stopPropagation()}
           >
-            <Box sx={{ display: "flex", justifyContent: "center", mt: 2}}>
+            <Box sx={{ display: "flex", justifyContent: "center", mt: 2 }}>
               <img
                 src="/logo/kathiwarlogo.png"
                 alt="Logo"
