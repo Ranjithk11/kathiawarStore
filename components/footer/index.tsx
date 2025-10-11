@@ -61,27 +61,20 @@ const FooterComponent = () => {
             <Box textAlign="center">
               <img src="/logo/kathiwarlogo.png" width={250} />
             </Box>
-            {/* <Typography
-              className="address"
-              color=""
-              textAlign="center"
-              variant="body1"
-            >
-              SKINSKA PHARMACEUTICA PRIVATE LIMITED
-            </Typography> */}
-
             <Grid item xs={12}>
               <Box display="flex" alignItems="center" justifyContent="center">
-                <Typography sx={{ color: "#fff", fontSize: 20 }} variant="h3">
+                <Typography sx={{ color: "#fff", fontSize: 20,ml:2 }} variant="h3">
                   Powered By{" "}
-                  {/* <Box component="span" sx={{ color: "#00FFAA", fontWeight: "bold" }}>
-                    Leafwater
-                  </Box> */}
                 </Typography>
-                <Box ml={2}>
-                  <img src="/logo/logo_gold_white.png" width={100} alt="Leafwater Logo" />
+              </Box>
+            </Grid>
+            <Grid item xs={12}>
+              <Box display="flex" alignItems="center" justifyContent="center">
+                <Box mt={2}>
+                  <img src="/logo/logo_gold_white.png" width={150} alt="Leafwater Logo" />
                 </Box>
               </Box>
+
             </Grid>
 
 
